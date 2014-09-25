@@ -21,7 +21,7 @@ public class StdStringTreeSet implements StringSet {
         return oldSize != size();
     }
 
-    private StringTreeNode add(StringTreeNode root, String value) {
+    public StringTreeNode add(StringTreeNode root, String value) {
         if (root == null) {
             root = new StringTreeNode(value);
             numElements++;
@@ -32,6 +32,7 @@ public class StdStringTreeSet implements StringSet {
         } else {
             root.right = add(root.right, value);
         }
+        updateHeight(root);
         return root;
     }
 
@@ -40,7 +41,7 @@ public class StdStringTreeSet implements StringSet {
         return contains(root, value);
     }
 
-    private boolean contains(StringTreeNode root, String value) {
+    public boolean contains(StringTreeNode root, String value) {
         if (root == null)
             return false;
         else if (root.data.compareTo(value) == 0) {
@@ -55,7 +56,6 @@ public class StdStringTreeSet implements StringSet {
     @Override
     public void print() {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -65,7 +65,7 @@ public class StdStringTreeSet implements StringSet {
         return oldSize == size();
     }
 
-    private StringTreeNode remove(StringTreeNode root, String value) {
+    public StringTreeNode remove(StringTreeNode root, String value) {
         if (root == null)
             return root;
         else if (root.data.compareTo(value) > 0) {
@@ -85,15 +85,16 @@ public class StdStringTreeSet implements StringSet {
                 numElements--;
             }
         }
+        updateHeight(root);
         return root;
     }
 
-    private StringTreeNode findMin(StringTreeNode root) {
-        if (root == null || (root.left == null && root.right == null))
+    public StringTreeNode findMin(StringTreeNode root) {
+        if (root == null || (root.left == null))
             return root;
         StringTreeNode tmp = root.left;
-        while (tmp.right != null)
-            tmp = tmp.right;
+        while (tmp.left != null)
+            tmp = tmp.left;
         return tmp;
     }
 
@@ -101,5 +102,44 @@ public class StdStringTreeSet implements StringSet {
     public int size() {
         return numElements;
     }
+    
+    protected void updateHeight(StringTreeNode node) {
+        if (node == null)
+            return;
+        if (node.left == null && node.right == null)
+            node.height = 0;
+        else if (node.right == null)
+            node.height = node.left.height + 1;
+        else if (node.left == null)
+            node.height = node.right.height + 1;
+        else
+            node.height = Math.max(node.left.height + 1, node.right.height + 1);
+    }
 
+    protected static int computeHeight(StringTreeNode node) {
+        if (node == null)
+            return -1;
+        return Math.max(computeHeight(node.left), computeHeight(node.right)) + 1;
+    }
+
+    protected static int balanceFactor(StringTreeNode node) {
+        if (node == null)
+            return 0;
+        int left = (node.left == null) ? 0 : node.left.height + 1;
+        int right = (node.right == null) ? 0 : node.right.height + 1;
+        return right - left;
+    }
+
+    public boolean isBalanced() {
+        return isBalanced(root);
+    }
+
+    private boolean isBalanced(StringTreeNode node) {
+        if (node == null)
+            return true;
+        int bf = balanceFactor(node);
+        if (bf > 1 || bf < -1)
+            return false;
+        return isBalanced(node.left) || isBalanced(node.right);
+    }
 }

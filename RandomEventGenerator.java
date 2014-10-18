@@ -13,8 +13,6 @@ public class RandomEventGenerator {
 
     /**
      * Use a boarder array to record the boundaries.
-     * 
-     * 
      */
     public RandomEventGenerator(String[] events, double[] posibilities) {
         this.events = events;

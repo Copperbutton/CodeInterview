@@ -12,7 +12,7 @@ public class UnionFind<T> {
     private Map<T, Integer> parent;
     private int size;
     private static final int DEFAULT_SIZE = 10;
-    
+
     public UnionFind() {
         this(DEFAULT_SIZE);
     }
@@ -73,18 +73,21 @@ public class UnionFind<T> {
     }
 
     /**
-     * Find root of a value. Compress the path on the process, set current value
-     * as parent of parent.
+     * Find root of a value. Compress the path on the process when the root more
+     * than two layer by setting current parent to its grand parent.
      */
     private int root(T val) {
         if (!parent.containsKey(val))
             throw new NoSuchElementException("Value not found.");
         int parentIndex = parent.get(val);
         while (data[parentIndex] != val) {
-            parent.put(val, parent.get(data[parentIndex]));
-            weight[parentIndex]--;
-            
-            val = data[parentIndex];
+            int grandParentIndex = parent.get(data[parentIndex]);
+            if (grandParentIndex != parentIndex) {
+                parent.put(val, grandParentIndex);
+                weight[parentIndex]--;
+            }
+
+            val = data[grandParentIndex];
             parentIndex = parent.get(val);
         }
         return parentIndex;

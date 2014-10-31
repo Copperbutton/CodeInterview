@@ -1,5 +1,13 @@
 package interviewquestions.google;
 
+/**
+ * Use the shorest unique prefix to represent each word in the array input:
+ * ["zebra", "dog", "duck",”dot”] output: {zebra: z, dog: do, duck: du}
+ * 
+ * [zebra, dog, duck, dove] {zebra:z, dog: dog, duck: du, dove: dov}
+ * 
+ * [bearcat, bear] {bearcat: bearc, bear: bear}
+ */
 public class ShortestStringRepresent {
     private static final int ASCII = 256;
 

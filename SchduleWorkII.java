@@ -14,6 +14,10 @@ public class SchduleWorkII {
         if (tasks == null || servers == null
                 || (servers.length == 0 && tasks.length != 0))
             return false;
+        
+        /** Sort is important for this algorithm: */
+        Arrays.sort(tasks);
+        Arrays.sort(servers);
 
         /** Print */
         System.out.println("Tasks: " + Arrays.toString(tasks));

@@ -82,18 +82,22 @@ public class MinMaxQueueImp<Key extends Comparable<Key>> implements
         size--;
         if (MinTAIL.key.compareTo(node.key) == 0) {
             MinTAIL = findPrev(MinHEAD, MinTAIL);
+            if (MinTAIL != null)
+                MinTAIL.next = null;
             if (MinTAIL == null)
                 MinHEAD = null;
         }
-        
+
         if (MaxTAIL.key.compareTo(node.key) == 0) {
             MaxTAIL = findPrev(MaxHEAD, MaxTAIL);
+            if (MaxTAIL != null)
+                MaxTAIL.next = null;
             if (MaxTAIL == null)
                 MaxHEAD = null;
         }
         return node.key;
     }
-    
+
     private Node findPrev(Node head, Node tail) {
         if (head == null || tail == null || head == tail)
             return null;

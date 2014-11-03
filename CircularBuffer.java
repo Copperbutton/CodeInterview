@@ -39,11 +39,23 @@ public class CircularBuffer {
     public int getCount() {
         return this.count;
     }
-    
-    public  void removeLast() {
+
+    public void removeLast() {
         if (tail == head)
             throw new NoSuchElementException("Error: buffer empty.");
         count -= buffer[tail++];
         tail %= buffer.length;
+    }
+
+    public boolean isFull() {
+        return (head + 1) % buffer.length == tail;
+    }
+
+    /**
+     * This is used to measure whether an given count term has ended. We achieve
+     * this by checking whether there the circular buffer has reached beginning.
+     */
+    public boolean isReachBeginning() {
+        return head == buffer.length - 1;
     }
 }

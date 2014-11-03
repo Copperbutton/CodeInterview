@@ -20,7 +20,7 @@ public class DesignTimer {
         }
     }
 
-    private static final long nanoToSecond = 1000000;
+    private static final long nanoToSecond = 1000 * 1000 * 1000;
     private static final long nanoToMinute = 60 * nanoToSecond;
     private static final long nanoToHour = 60 * nanoToMinute;
     private static final long nanoToDay = 24 * nanoToHour;

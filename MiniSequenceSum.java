@@ -27,14 +27,14 @@ public class MiniSequenceSum {
                 break;
 
             /** Start move forward */
-            while (start < end && currSum >= sum)
+            while (start <= end && currSum >= sum)
                 currSum -= array[start++];
 
             /**
              * One thing to pay attention, when the window move to the end of
              * array, can not use end - start to range
              */
-            int len = end == array.length ? end - start + 1 : end - start;
+            int len = end - start + 1;
             minLen = minLen < 0 ? len : Math.min(len, minLen);
         }
         return minLen;

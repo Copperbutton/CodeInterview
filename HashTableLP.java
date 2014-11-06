@@ -49,23 +49,25 @@ public class HashTableLP<Key, Value> {
      */
     @SuppressWarnings("unchecked")
     public Value get(Key key) {
-        int index = index(key);
-        while (data[index] != null && !data[index].equals(key)) {
+        int index = index(key, data.length);
+        while (data[index] != null && !data[index].key.equals(key)) {
             index++;
             index %= data.length;
         }
         return data[index] == null ? null : (Value) data[index].value;
     }
 
-    /** What if the hash table is full. */
+    /**
+     * Find the slot on the table, if there has exitsted, then override, or find
+     * the place to put.
+     */
     public void put(Key key, Value value) {
         if (size >= data.length / 2)
             resize(data.length * 2);
 
-        int index = index(key);
-        while (data[index] != null) {
-            index++;
-            index %= data.length;
+        int index = index(key, data.length);
+        while (data[index] != null && !data[index].key.equals(key)) {
+            index = (index + 1) % data.length;
         }
         data[index] = new Node(key, value);
         size++;
@@ -80,18 +82,17 @@ public class HashTableLP<Key, Value> {
         for (Node node : data) {
             if (node == null)
                 continue;
-            int index = (node.key.hashCode() & 0x7fffffff) % newData.length;
+            int index = index((Key)node.key, newData.length);
             while (newData[index] != null) {
-                index++;
-                index %= newData.length;
+                index = (index + 1) % newData.length;
             }
             newData[index] = node;
         }
         data = newData;
     }
 
-    private int index(Key key) {
-        return (key.hashCode() & 0x7fffffff) % data.length;
+    private int index(Key key, int base) {
+        return (key.hashCode() & 0x7fffffff) % base;
     }
 
     public boolean isEmpty() {
@@ -100,6 +101,36 @@ public class HashTableLP<Key, Value> {
 
     public int size() {
         return this.size;
+    }
+
+    /**
+     * What to do with hasht able linear probing remove? to copy all values that
+     * next to it back?
+     */
+    public void remove(Key key) {
+        /** First step, check if given key on the table */
+        if (!containsKey(key))
+            return;
+
+        /** Then find the key and set the array slot as empty. */
+        int index = index(key, data.length);
+        while (!data[index].key.equals(key))
+            index = (index + 1) % data.length;
+        data[index] = null;
+
+        /** Copy all later data into current position. */
+        index = (index + 1) % data.length;
+        while (data[index] != null) {
+            Node node = data[index];
+            data[index] = null;
+            /** Put data into new slot, this implementation is not efficient. */
+            put((Key) node.key, (Value) node.value);
+        }
+        size--;
+    }
+
+    public boolean containsKey(Key key) {
+        return get(key) != null;
     }
 
     @SuppressWarnings("unchecked")
